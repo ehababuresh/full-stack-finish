@@ -1,8 +1,8 @@
-// VerificationPage.js
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, TextField, Button, Paper } from '@mui/material';
-import useUsers from '../hooks/useUsers'; // Make sure the path to the file is correct
+import useUsers from '../hooks/useUsers'; 
 
 const VerificationPage = () => {
   const [verificationCode, setVerificationCode] = useState('');
@@ -13,7 +13,7 @@ const VerificationPage = () => {
     setVerificationCode(event.target.value);
   };
 
-  const { handleVerifyCode } = useUsers(); // Make sure this function is defined correctly in useUsers()
+  const { handleVerifyCode } = useUsers();
 
   const handleVerificationSubmit = async (event) => {
     event.preventDefault();

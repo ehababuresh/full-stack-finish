@@ -27,7 +27,7 @@ const Indexpage = () => {
       description: 'מנכ"ל חברת גוגל',
     },
   
-    // Add more images with their respective names and descriptions...
+   
   ]);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

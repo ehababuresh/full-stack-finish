@@ -8,8 +8,6 @@ import ROUTES from "../../routes/routesModel";
 import { useUser } from "../../users/providers/UserProvider";
 
 
-
-
 const CardsPage = () => {
   const { value, handleGetCards , handleDeleteCard } = useCards();
   const {isLoading , error,filteredCards} = value ; 

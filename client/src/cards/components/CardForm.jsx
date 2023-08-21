@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { func, object, string } from "prop-types";
 import Form from "../../forms/components/Form";
 import Input from "../../forms/components/Input";
-import { TextareaAutosize, IconButton, List, ListItem } from '@mui/material';
+import { TextareaAutosize } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { useUser } from "../../users/providers/UserProvider";
 const CardForm = ({
@@ -40,13 +40,11 @@ const CardForm = ({
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Create a new FormData object and append the selected image file to it
+  
     const formData = new FormData();
     formData.append("image", imageFile);
 
-    // ... Other form data ...
-
-    // Attach the image to your form data
+   
     const imageData = {
       ...data,
       imageUrl: imageFile ? URL.createObjectURL(imageFile) : data.imageUrl,
@@ -107,7 +105,7 @@ const CardForm = ({
       />
           <Input
             name="webUrl"
-            label="תגובות"
+            label="web"
             error={errors.webUrl}
             onChange={onInputChange}
             data={data}
@@ -118,9 +116,9 @@ const CardForm = ({
         <Input
           name="imageUrl"
           label="Image"
-          type="file" // Set the input type to "file"
+          type="file" 
           error={errors.imageUrl}
-          onChange={handleImageChange} // Use the new handleImageChange function
+          onChange={handleImageChange} 
           data={data}
           sm={6}
           required={false}

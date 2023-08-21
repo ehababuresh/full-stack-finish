@@ -150,7 +150,7 @@ const sendResetEmail = async (email) => {
   try {
     const verificationCode = generateVerificationCode();
     await saveVerificationCode(email, verificationCode);
-    // Implement your logic to send the reset password email
+    
     console.log(`Reset password email sent to ${email} with verification code ${verificationCode}.`);
   } catch (error) {
     console.error("Error sending reset password email:", error);

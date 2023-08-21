@@ -1,18 +1,12 @@
 
-// export default ProfilePage;
 import React, { useEffect, useState } from "react";
 import { useUser } from "../providers/UserProvider";
 import ROUTES from "../../routes/routesModel";
 import { Navigate } from "react-router-dom";
 import { fetchUserInfo, saveUserInfo } from "../../cards/services/userApiService";
 import useAxios from "../../hooks/useAxios";
-// Import the UserForm component
 import UserForm from "../components/UserForm";
-import { green, red } from "@mui/material/colors";
-
 import { useSnack } from "../../providers/SnackbarProvider";
-import signupSchema from "../models/joi-schema/signupSchema";
-
 
 
 const ProfilePage = () => {

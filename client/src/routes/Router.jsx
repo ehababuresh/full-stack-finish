@@ -13,10 +13,8 @@ import CreateCardPage from "../cards/pages/CreateCardPage";
 import EditCardPage from "../cards/pages/EditCardpage";
 import EditUserpage from "../users/pages/EditUserpage";
 import Indexpage from "../cards/pages/Indexpage";
-
 import ContactPage from "../cards/pages/Contactpage";
 import ProfilePage from "../users/pages/Profilepage";
-
 import ForgotPasswordPage from "../users/pages/ForgotPasswordPage";
 import ResetPasswordPage from "../users/pages/ResetPasswordPage";
 import VerificationPage from "../users/pages/VerificationPage";

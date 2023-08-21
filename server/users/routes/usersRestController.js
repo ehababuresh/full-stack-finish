@@ -5,7 +5,7 @@ const { handleError } = require("../../utils/handleErrors");
 const { generateUserPassword } = require("../helpers/bcrypt");
 const normalizeUser = require("../helpers/normalizeUser");
 
-// const router = require("./router/router");
+
 
 const {
   registerUser,
