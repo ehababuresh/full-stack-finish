@@ -17,7 +17,7 @@ router.get("/:cardId", auth, async (req, res) => {
   }
 }); 
 
-// Save comment for a specific card
+
 router.post("/:userId/:cardId", auth, async (req, res) => {
   const { userId, cardId } = req.params;
   const { content } = req.body;

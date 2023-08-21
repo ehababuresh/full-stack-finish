@@ -130,7 +130,7 @@ const deleteCard = async (cardId, user) => {
 
 
 
-// Get comments for a specific card
+
 const getCardComments = async cardId => {
   if (DB === "MONGODB") {
     try {
