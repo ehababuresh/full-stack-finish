@@ -44,12 +44,50 @@ const getCard = async cardId => {
   return Promise.resolve("get card not in mongodb");
 };
 
-const createCard = async normalizedCard => {
+// const createCard = async normalizedCard => {
+//   if (DB === "MONGODB") {
+//     try {
+//       let card = new Card(normalizedCard);
+//       card = await card.save();
+//       return Promise.resolve(card);
+//     } catch (error) {
+//       error.status = 400;
+//       return handleBadRequest("Mongoose", error);
+//     }
+//   }
+//   return Promise.resolve("createCard card not in mongodb");
+// };
+
+const createCard = async (normalizedCard, imageData, altText) => {
   if (DB === "MONGODB") {
     try {
-      let card = new Card(normalizedCard);
-      card = await card.save();
-      return Promise.resolve(card);
+      if (imageData) {
+        // Upload the image and get the image URL
+        const imageUrl = await uploadImage(imageData); // Replace with your image upload logic
+
+        // Create a new Image instance based on the schema
+        const newImage = new Image({
+          url: imageUrl,
+          alt: altText || "Image Alt Text", // Provide an alt text for the image
+        });
+
+        // Create a new Card instance with the image
+        const card = new Card({
+          ...normalizedCard,
+          image: newImage,
+        });
+
+        // Save the card to the database
+        const savedCard = await card.save();
+        return Promise.resolve(savedCard);
+      } else {
+        // Create a new Card instance without the image
+        const card = new Card(normalizedCard);
+
+        // Save the card to the database
+        const savedCard = await card.save();
+        return Promise.resolve(savedCard);
+      }
     } catch (error) {
       error.status = 400;
       return handleBadRequest("Mongoose", error);
@@ -57,6 +95,7 @@ const createCard = async normalizedCard => {
   }
   return Promise.resolve("createCard card not in mongodb");
 };
+
 
 const updateCard = async (cardId, normalizedCard) => {
   if (DB === "MONGODB") {
@@ -163,6 +202,7 @@ const addCardComment = async (cardId, authorId, userId, content) => {
   }
   return Promise.resolve("add comment not in mongodb");
 };
+
 
 
 exports.getCards = getCards;

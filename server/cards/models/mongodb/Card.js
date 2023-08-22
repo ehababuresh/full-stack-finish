@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const Address = require("./Address");
 const Image = require("./Image");
 const { DEFAULT_VALIDATION, URL } = require("../../helpers/mongooseValidators");
-
 const commentsModel = require("./Comment");
 
 

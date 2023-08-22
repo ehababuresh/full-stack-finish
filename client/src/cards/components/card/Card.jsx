@@ -3,6 +3,7 @@ import { func } from "prop-types";
 import MuiCard from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardBody from "./CardBody";
+import CardHead from "./CardHead";
 import CardActionBar from "./CardActionBar";
 import cardType from "./../../models/types/cardType";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +20,7 @@ const Card = ({ card, onDelete, onLike }) => {
       <CardActionArea
         onClick={() => navigate(`${ROUTES.CARD_DETAILS}/${card._id}`)}
       >
-        {/* <CardHead image={card.image} /> */}
+        <CardHead image={card.image} />
         <CardBody card={card} />
       </CardActionArea>
 
