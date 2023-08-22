@@ -5,6 +5,8 @@ import Form from "../../forms/components/Form";
 import Input from "../../forms/components/Input";
 import { TextareaAutosize } from '@mui/material';
 import { Delete } from '@mui/icons-material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
 import { useUser } from "../../users/providers/UserProvider";
 const CardForm = ({
   onSubmit,
@@ -20,6 +22,7 @@ const CardForm = ({
   const { user } = useUser();
 
   const isAdmin = user?.isAdmin;
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -113,7 +116,7 @@ const CardForm = ({
             required={false}
           />
 
-        <Input
+        {/* <Input
           name="imageUrl"
           label="Image"
           type="file" 
@@ -122,7 +125,24 @@ const CardForm = ({
           data={data}
           sm={6}
           required={false}
-        />
+        /> */}
+        <Input
+  name="imageUrl"
+  label="Image"
+  type="file"
+  error={errors.imageUrl}
+  onChange={handleImageChange}
+  data={data}
+  sm={6}
+  required={false}
+  InputProps={{
+    startAdornment: (
+      <CloudUploadIcon
+        style={{ marginRight: '8px', fontSize: '1.25rem', color: '#888' }}
+      />
+    ),
+  }}
+/>
      
         <Input
           name="imageAlt"

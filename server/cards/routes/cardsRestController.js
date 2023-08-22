@@ -2,6 +2,8 @@ const express = require("express");
 const auth = require("../../auth/authService");
 const { handleError } = require("../../utils/handleErrors");
 const normalizeCard = require("../helpers/normalizeCard");
+const multer = require("multer");
+
 const {
   getCards,
   getMyCards,
@@ -65,6 +67,30 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+// router.post("/", auth, upload.single("image"), async (req, res) => {
+//   try {
+//     let card = req.body;
+//     const user = req.user;
+//     const imageFile = req.file; // קובץ התמונה שהועלה בשדה "image"
+
+//     if (!user.isBusiness)
+//       return handleError(res, 403, "Authentication Error: Unauthorize user");
+
+//     const { error } = validateCard(card);
+//     if (error)
+//       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
+
+//     card = await normalizeCard(card, user._id);
+
+//     // קריאה לפונקציה שמציבה את הכרטיס במסד הנתונים, ושלפי צורך תעביר גם את פרטי התמונה
+//     card = await createCard(card, imageFile, card.imageUrl); // תצטרך לשנות את השמות לפי הצורך
+//     return res.status(201).send(card);
+//   } catch (error) {
+//     return handleError(res, error.status || 500, error.message);
+//   }
+// });
+
+
 router.put("/:id", auth, async (req, res) => {
   try {
     let card = req.body;
@@ -113,18 +139,7 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
-// router.post("/:id/comments", auth, async (req, res) => {
-//   try {
-//     const cardId = req.params.id;
-//     const userId = req.user._id;
-//     const comment = req.body.comment;
 
-//     const card = await addcontext(cardId, userId, comment);
-//     return res.send(card);
-//   } catch (error) {
-//     return handleError(res, error.status || 500, error.message);
-//   }
-// });
 
 module.exports = router;
 

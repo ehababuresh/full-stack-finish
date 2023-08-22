@@ -2,7 +2,20 @@ const Card = require("./mongodb/Card");
 const Comment = require("./mongodb/Comment");
 const { handleBadRequest } = require("../../utils/handleErrors");
 
+const multer = require("multer");
+
 const DB = process.env.DB || "MONGODB";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // המסלול בו ישמרו התמונות
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname); // שם התמונה המקורי עם תאריך
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const getCards = async () => {
   if (DB === "MONGODB") {
@@ -58,33 +71,33 @@ const getCard = async cardId => {
 //   return Promise.resolve("createCard card not in mongodb");
 // };
 
-const createCard = async (normalizedCard, imageData, altText) => {
+const createCard = async (normalizedCard, imageFile, altText) => {
   if (DB === "MONGODB") {
     try {
-      if (imageData) {
-        // Upload the image and get the image URL
-        const imageUrl = await uploadImage(imageData); // Replace with your image upload logic
+      if (imageFile) {
+        // העלאת התמונה וקבלת כתובת URL
+        const imageUrl = await uploadImage(imageFile);
 
-        // Create a new Image instance based on the schema
+        // יצירת מודל Image
         const newImage = new Image({
           url: imageUrl,
-          alt: altText || "Image Alt Text", // Provide an alt text for the image
+          alt: altText || "Image Alt Text",
         });
 
-        // Create a new Card instance with the image
+        // יצירת מודל Card עם התמונה
         const card = new Card({
           ...normalizedCard,
           image: newImage,
         });
 
-        // Save the card to the database
+        // שמירת הכרטיס במסד הנתונים
         const savedCard = await card.save();
         return Promise.resolve(savedCard);
       } else {
-        // Create a new Card instance without the image
+        // יצירת מודל Card ללא התמונה
         const card = new Card(normalizedCard);
 
-        // Save the card to the database
+        // שמירת הכרטיס במסד הנתונים
         const savedCard = await card.save();
         return Promise.resolve(savedCard);
       }
@@ -95,7 +108,6 @@ const createCard = async (normalizedCard, imageData, altText) => {
   }
   return Promise.resolve("createCard card not in mongodb");
 };
-
 
 const updateCard = async (cardId, normalizedCard) => {
   if (DB === "MONGODB") {
