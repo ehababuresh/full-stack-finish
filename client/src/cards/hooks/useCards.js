@@ -100,7 +100,7 @@ const useCards = () => {
     try {
       const card = await deleteCard(cardId);
       requestStatus(false, null,null, card);
-      snack ("success" , "The card has been successfully deleted ");
+      snack ("success" , "The profile  has been successfully deleted ");
     } catch (error) {
       requestStatus(false, error, null);
     }
@@ -113,7 +113,7 @@ const handleUpdateCard = useCallback (
       setLoading (true) ;
       const card = await editCard(cardId, normalizedCard) ;
       requestStatus (false , null , null, card) ;
-      snack ("success" , "The business card has been successfully updated ");
+      snack ("success" , "The profile has been successfully updated ");
       navigate (ROUTES.MY_CARDS);
     }catch (error) {
       requestStatus (false , error , null)
@@ -142,7 +142,7 @@ const handleUpdateCard = useCallback (
       const normalizedCard = normalizeCard(cardFromClient);
       const card = await createCard(normalizedCard);
       requestStatus(false, null, null, card);
-      snack("success", "A new business card has been created");
+      snack("success", "A new business profile  has been created");
       navigate(ROUTES.MY_CARDS);
     } catch (error) {
       requestStatus(false, error, null);

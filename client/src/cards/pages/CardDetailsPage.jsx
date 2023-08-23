@@ -12,6 +12,8 @@ import { Delete } from '@mui/icons-material';
 import { v4 as uuidv4 } from 'uuid';
 import { deleteComment, getComments, saveComment } from "../services/commentsApiService";
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 const CardDetailsPage = () => {
   const [cardInfo, setCardInfo] = useState();
   const { handleGetCard } = useCards();
@@ -22,6 +24,7 @@ const CardDetailsPage = () => {
   const [comments, setComments] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
@@ -70,9 +73,11 @@ const CardDetailsPage = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     handleGetCard(cardId).then(data => {
       const modeledCard = mapCardToModel(data);
       setCardInfo(modeledCard);
+      setIsLoading(false); 
     });
   }, [cardId, handleGetCard]);
 
@@ -86,7 +91,20 @@ const CardDetailsPage = () => {
 
   if (!user) return <Navigate replace to={ROUTES.ROOT} />;
 
-  
+  if (isLoading) {
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Container>
+    );
+  }
+
   return (
     <Container
       sx={{
