@@ -70,34 +70,38 @@ const getCard = async cardId => {
 //   }
 //   return Promise.resolve("createCard card not in mongodb");
 // };
+const uploadImage = async (file) => {
+  try {
+    // Upload the image to a storage service
+    const uploadedFileData = await storageService.upload(file);
 
-const createCard = async (normalizedCard, imageFile, altText) => {
+    // Get the URL of the uploaded file
+    const uploadedImageUrl = uploadedFileData.url;
+
+    return uploadedImageUrl;
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    throw new Error("Failed to upload image");
+  }
+};
+
+const createCard = async (normalizedCard, imageFile = null) => {
   if (DB === "MONGODB") {
     try {
       if (imageFile) {
-        // העלאת התמונה וקבלת כתובת URL
         const imageUrl = await uploadImage(imageFile);
-
-        // יצירת מודל Image
-        const newImage = new Image({
+        const newImage = {
           url: imageUrl,
-          alt: altText || "Image Alt Text",
-        });
-
-        // יצירת מודל Card עם התמונה
+          alt: "Image Alt Text",
+        };
         const card = new Card({
           ...normalizedCard,
           image: newImage,
         });
-
-        // שמירת הכרטיס במסד הנתונים
         const savedCard = await card.save();
         return Promise.resolve(savedCard);
       } else {
-        // יצירת מודל Card ללא התמונה
         const card = new Card(normalizedCard);
-
-        // שמירת הכרטיס במסד הנתונים
         const savedCard = await card.save();
         return Promise.resolve(savedCard);
       }
@@ -106,8 +110,9 @@ const createCard = async (normalizedCard, imageFile, altText) => {
       return handleBadRequest("Mongoose", error);
     }
   }
-  return Promise.resolve("createCard card not in mongodb");
+  return Promise.resolve("createCard not in mongodb");
 };
+
 
 const updateCard = async (cardId, normalizedCard) => {
   if (DB === "MONGODB") {

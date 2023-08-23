@@ -20,7 +20,7 @@ const Card = ({ card, onDelete, onLike }) => {
       <CardActionArea
         onClick={() => navigate(`${ROUTES.CARD_DETAILS}/${card._id}`)}
       >
-        {/* <CardHead image={card.image} /> */}
+        <CardHead image={card.image} />
         <CardBody card={card} />
       </CardActionArea>
 

@@ -17,7 +17,7 @@ export const ThemeProvider = ({ children }) => {
     palette: {
       mode: isDark ? "dark" : "light",
       primary: {
-        main: isDark ? "#fff" : "#1d5c80", 
+        main: isDark ? "#fff" : "#1d5c60", 
       },
     },
   });
