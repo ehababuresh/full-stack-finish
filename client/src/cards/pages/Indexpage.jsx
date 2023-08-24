@@ -1,41 +1,42 @@
-
 import React, { useEffect, useState } from "react";
-import { Typography, Box, Card, CardMedia, CardContent, Avatar } from '@mui/material';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { Typography, Box, Card, CardMedia, CardContent, Avatar, CircularProgress, Fade } from "@mui/material";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 
 const Indexpage = () => {
   const [images] = useState([
     {
-      
-      img:  "https://i.ibb.co/JCPJQbB/AP20158830540005.jpg",
+      img: "https://i.ibb.co/JCPJQbB/AP20158830540005.jpg",
       name: 'מארק זוקרברג',
       description: 'מייסד פייסבוק',
     },
     {
-      img:  "https://i.ibb.co/SKY4whN/S-Elon-Musk-Space-.jpg",
+      img: "https://i.ibb.co/SKY4whN/S-Elon-Musk-Space-.jpg",
       name: 'אילון מאסק',
       description: 'מייסד טסלה וחברת החלל ספייסאקס',
     },
     {
-      img:  "https://i.ibb.co/yQbJ30X/2.jpg",
+      img: "https://i.ibb.co/yQbJ30X/2.jpg",
       name: 'גף ביזוס',
       description: 'יו"ר הדירקטוריון ולשעבר נשיא ומנכ"ל של חברת אמזון',
     },
     {
-      img:  "https://i.ibb.co/fpqkkjQ/Sundar-Pichai-60.jpg",
+      img: "https://i.ibb.co/fpqkkjQ/Sundar-Pichai-60.jpg",
       name: ' סונדאר פיצאי',
       description: 'מנכ"ל חברת גוגל',
     },
-  
-   
   ]);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 3000);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 700);
 
     return () => {
       clearInterval(interval);
@@ -55,12 +56,19 @@ const Indexpage = () => {
   };
 
   return (
-    <Box sx={{ backgroundColor: "#f5f5f5", padding: "2rem" }}>
+    <Box sx={{ backgroundColor: "#f5f5f5", padding: "2rem", position: "relative" }}>
+      {loading && (
+        <Fade in={loading}>
+          <CircularProgress
+            style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+          />
+        </Fade>
+      )}
       <Typography variant="h3" align="center" gutterBottom>
         קדימה לקריירה שלך
       </Typography>
       <Typography variant="body1" align="center">
-         אתר המציג לך אנשים מוצלחים מגמות קריירה שונות ומספרים את סיפורם,בוא תלמד מה הדרך הנכונה איך להיות עשיר
+        אתר המציג לך אנשים מוצלחים מגמות קריירה שונות ומספרים את סיפורם, בוא תלמד מה הדרך הנכונה איך להיות עשיר
       </Typography>
       <Card sx={{ maxWidth: 400, margin: "2rem auto" }}>
         <CardMedia

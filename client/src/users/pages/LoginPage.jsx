@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
@@ -14,15 +13,11 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import GoogleLogin from "react-google-login";
-
+import CircularProgress from "@mui/material/CircularProgress"; 
 import { Link } from "react-router-dom";
 
-
-
 const clientid =
-"538664988641-htvn0bar2t4hep03es2fkkl0m343md8d.apps.googleusercontent.com"
-
- 
+  "538664988641-htvn0bar2t4hep03es2fkkl0m343md8d.apps.googleusercontent.com";
 
 const GoogleLoginButton = ({ onSuccess, onError }) => {
   const handleGoogleLogin = (response) => {
@@ -32,11 +27,6 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
       onError(response?.error || "An unknown error occurred");
     }
   };
-
-  const handleForgotPassword = () => {
-    return <Navigate to={ROUTES.FORGET_PASSWORD} replace />;
-  };
-
 
   return (
     <GoogleLogin
@@ -63,22 +53,26 @@ const LoginPage = () => {
     handleLogin
   );
 
+  const [loading, setLoading] = useState(false); 
+
   const handleGoogleSuccess = (response) => {
+    setLoading(true); 
     console.log("התחברות דרך גוגל הצליחה!", response);
     const { profileObj, tokenId } = response;
 
     setUser(response.profileObj);
     setToken(response.tokenId);
 
-    return <Navigate to={ROUTES.ROOT} replace />;
+    
+    setTimeout(() => {
+      setLoading(false); 
+      return <Navigate to={ROUTES.ROOT} replace />;
+    }, 2000);
   };
 
   const handleGoogleError = (error) => {
     console.error("Error logging in with Google:", error);
-   
   };
-
- 
 
   if (user) return <Navigate replace to={ROUTES.ROOT} />;
 
@@ -123,20 +117,26 @@ const LoginPage = () => {
         />
       </Form>
       <GoogleLoginButton
-      onSuccess={handleGoogleSuccess}
-      onError={handleGoogleError}
-    />
+        onSuccess={handleGoogleSuccess}
+        onError={handleGoogleError}
+      />
       <Link
-      to={ROUTES.FORGET_PASSWORD}
-      style={{ color: "inherit", textDecoration: "none" }}
-    >
-      <Typography variant="body2" align="center">
-     רוצה לעדכן סיסמה? לחץ כאן
-      </Typography>
-    </Link>
+        to={ROUTES.FORGET_PASSWORD}
+        style={{ color: "inherit", textDecoration: "none" }}
+      >
+        <Typography variant="body2" align="center">
+          רוצה לעדכן סיסמה? לחץ כאן
+        </Typography>
+      </Link>
+
+    
+      {loading && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <CircularProgress />
+        </div>
+      )}
     </Container>
   );
 };
 
 export default LoginPage;
-
