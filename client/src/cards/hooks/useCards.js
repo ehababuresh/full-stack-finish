@@ -142,7 +142,7 @@ const handleUpdateCard = useCallback (
       const normalizedCard = normalizeCard(cardFromClient);
       const card = await createCard(normalizedCard);
       requestStatus(false, null, null, card);
-      snack("success", "A new business profile  has been created");
+      snack("success", "A new profile  has been created");
       navigate(ROUTES.MY_CARDS);
     } catch (error) {
       requestStatus(false, error, null);
