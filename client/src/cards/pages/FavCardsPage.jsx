@@ -1,13 +1,13 @@
-import { useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useCards from "../hooks/useCards";
 import { useUser } from "../../users/providers/UserProvider";
 import { Navigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
 import PageHeader from "../../components/PageHeader";
 import Container from "@mui/material/Container";
-import { useEffect } from "react";
 import CardsFeedback from "../components/CardsFeedback";
 import Grid from "@mui/material/Grid";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const FavCardsPage = () => {
   const { user } = useUser();
@@ -44,14 +44,21 @@ const FavCardsPage = () => {
         </Grid>
       </Grid>
 
-      <CardsFeedback
-        isLoading={isLoading}
-        error={error}
-        cards={filteredCards}
-        onDelete={onDeleteCard}
-        onLike={changeLikeStatus}
-      />
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <CardsFeedback
+            isLoading={isLoading}
+            error={error}
+            cards={filteredCards}
+            onDelete={onDeleteCard}
+            onLike={changeLikeStatus}
+          />
+        )}
+      </div>
     </Container>
   );
 };
+
 export default FavCardsPage;

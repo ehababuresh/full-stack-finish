@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
 import { useUser } from "../providers/UserProvider";
@@ -46,35 +46,53 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
 const LoginPage = () => {
   const { user, setUser, token, setToken } = useUser();
   const { handleLogin } = useUsers();
-
   const { value, ...rest } = useForm(
     initialLoginForm,
     loginSchema,
     handleLogin
   );
 
-  const [loading, setLoading] = useState(false); 
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    setTimeout(() => {
+      setInitialLoading(false);
+    }, 500);  // 500 ms = 0.5 seconds
+  }, []);
+  
+  useEffect(() => {
+    if (user) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        Navigate(ROUTES.ROOT);
+      }, 500); // 500 ms = 0.5 seconds
+    }
+  }, [user]);
 
-  const handleGoogleSuccess = (response) => {
-    setLoading(true); 
+  const handleGoogleSuccess = async (response) => {
+    setLoading(true);
     console.log("התחברות דרך גוגל הצליחה!", response);
     const { profileObj, tokenId } = response;
 
-    setUser(response.profileObj);
-    setToken(response.tokenId);
+    setUser(profileObj);
+    setToken(tokenId);
 
-    
-    setTimeout(() => {
-      setLoading(false); 
-      return <Navigate to={ROUTES.ROOT} replace />;
-    }, 2000);
+    setLoading(false);
   };
 
   const handleGoogleError = (error) => {
     console.error("Error logging in with Google:", error);
   };
 
-  if (user) return <Navigate replace to={ROUTES.ROOT} />;
+  if (initialLoading || loading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Container
@@ -128,13 +146,6 @@ const LoginPage = () => {
           רוצה לעדכן סיסמה? לחץ כאן
         </Typography>
       </Link>
-
-    
-      {loading && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-          <CircularProgress />
-        </div>
-      )}
     </Container>
   );
 };

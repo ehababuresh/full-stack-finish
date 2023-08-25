@@ -24,6 +24,8 @@ const registerUser = async (normalizedUser) => {
       return Promise.reject(error);
     }
   }
+  const verificationCode = generateVerificationCode();
+  await saveVerificationCode(normalizedUser.email, verificationCode);
   return Promise.resolve("registerUser new user not in mongodb");
 };
 

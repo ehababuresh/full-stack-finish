@@ -15,7 +15,7 @@ const MyCardsPage = () => {
   const { user } = useUser();
   const { value, handleGetMyCards, handleDeleteCard } = useCards();
   const { isLoading, error, cards, filteredCards } = value;
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -32,7 +32,7 @@ function LoggedInStatus() {
   if (user) {
     return <p className="status connected">מחובר {user.name}</p>; 
   } else {
-    return <p className="status not-connected">לא מחובר</p>; 
+    return <p className="status not-connected"></p>; 
   }
 }
 export default App;

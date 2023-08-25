@@ -1,33 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Box, Card, CardMedia, CardContent, Avatar, CircularProgress, Fade } from "@mui/material";
-import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import React, { useEffect, useState } from 'react';
+import { Typography, Box, Card, CardMedia, CardContent, Avatar, CircularProgress, Fade, Button } from '@mui/material';
+import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
+import { useNavigate, Navigate } from "react-router-dom";
+import ROUTES from "../../routes/routesModel";
 
 const Indexpage = () => {
   const [images] = useState([
     {
-      img: "https://i.ibb.co/JCPJQbB/AP20158830540005.jpg",
+      img: 'https://i.ibb.co/JCPJQbB/AP20158830540005.jpg',
       name: 'מארק זוקרברג',
       description: 'מייסד פייסבוק',
     },
     {
-      img: "https://i.ibb.co/SKY4whN/S-Elon-Musk-Space-.jpg",
+      img: 'https://i.ibb.co/SKY4whN/S-Elon-Musk-Space-.jpg',
       name: 'אילון מאסק',
       description: 'מייסד טסלה וחברת החלל ספייסאקס',
     },
     {
-      img: "https://i.ibb.co/yQbJ30X/2.jpg",
+      img: 'https://i.ibb.co/yQbJ30X/2.jpg',
       name: 'גף ביזוס',
       description: 'יו"ר הדירקטוריון ולשעבר נשיא ומנכ"ל של חברת אמזון',
     },
     {
-      img: "https://i.ibb.co/fpqkkjQ/Sundar-Pichai-60.jpg",
-      name: ' סונדאר פיצאי',
+      img: 'https://i.ibb.co/fpqkkjQ/Sundar-Pichai-60.jpg',
+      name: 'סונדאר פיצאי',
       description: 'מנכ"ל חברת גוגל',
     },
   ]);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,13 +57,16 @@ const Indexpage = () => {
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
   };
+  const handleRegisterClick = () => {
+    navigate('/signup', { replace: true }); 
+  };
 
   return (
-    <Box sx={{ backgroundColor: "#f5f5f5", padding: "2rem", position: "relative" }}>
+    <Box sx={{ backgroundColor: '#f1f9f1', padding: '2rem', position: 'relative' }}>
       {loading && (
         <Fade in={loading}>
           <CircularProgress
-            style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+            style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
           />
         </Fade>
       )}
@@ -70,7 +76,7 @@ const Indexpage = () => {
       <Typography variant="body1" align="center">
         אתר המציג לך אנשים מוצלחים מגמות קריירה שונות ומספרים את סיפורם, בוא תלמד מה הדרך הנכונה איך להיות עשיר
       </Typography>
-      <Card sx={{ maxWidth: 400, margin: "2rem auto" }}>
+      <Card sx={{ maxWidth: 400, margin: '2rem auto', backgroundColor: '#ffffff', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
         <CardMedia
           component="img"
           height="300"
@@ -89,9 +95,15 @@ const Indexpage = () => {
             src={images[currentImageIndex].img}
           />
         </CardContent>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <KeyboardArrowLeft onClick={handlePrevImage} />
-          <KeyboardArrowRight onClick={handleNextImage} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '1rem' }}>
+          <KeyboardArrowLeft sx={{ cursor: 'pointer' }} onClick={handlePrevImage} />
+          <KeyboardArrowRight sx={{ cursor: 'pointer' }} onClick={handleNextImage} />
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
+       
+    <Button variant="contained" color="primary" size="large" onClick={handleRegisterClick}>
+      הירשם עכשיו
+    </Button>
         </Box>
       </Card>
     </Box>
