@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import Paper from "@mui/material/Paper";
 import InfoIcon from "@mui/icons-material/Info";
 import PortraitIcon from "@mui/icons-material/Portrait";
@@ -18,6 +17,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { styled } from "@mui/system";
+import GradeIcon from '@mui/icons-material/Grade';
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)`
   && {
@@ -74,7 +74,7 @@ const Footer = () => {
         {user && (
           <BottomNavigationAction
             label="Liked"
-            icon={<FavoriteIcon />}
+            icon={<GradeIcon/>}
             onClick={() => navigate(ROUTES.FAV_CARDS)}
           />
         )}
