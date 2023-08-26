@@ -1,6 +1,7 @@
 const Card = require("./mongodb/Card");
 const Comment = require("./mongodb/Comment");
 const { handleBadRequest } = require("../../utils/handleErrors");
+const Image= require("./mongodb/Image");
 
 const multer = require("multer");
 
@@ -8,14 +9,15 @@ const DB = process.env.DB || "MONGODB";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // המסלול בו ישמרו התמונות
+    cb(null, "uploads/"); 
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // שם התמונה המקורי עם תאריך
+    cb(null, Date.now() + "-" + file.originalname); 
   },
 });
 
 const upload = multer({ storage: storage });
+
 
 const getCards = async () => {
   if (DB === "MONGODB") {
@@ -57,33 +59,23 @@ const getCard = async cardId => {
   return Promise.resolve("get card not in mongodb");
 };
 
-// const createCard = async normalizedCard => {
-//   if (DB === "MONGODB") {
-//     try {
-//       let card = new Card(normalizedCard);
-//       card = await card.save();
-//       return Promise.resolve(card);
-//     } catch (error) {
-//       error.status = 400;
-//       return handleBadRequest("Mongoose", error);
-//     }
-//   }
-//   return Promise.resolve("createCard card not in mongodb");
-// };
 const uploadImage = async (file) => {
-  try {
-    // Upload the image to a storage service
-    const uploadedFileData = await storageService.upload(file);
-
-    // Get the URL of the uploaded file
-    const uploadedImageUrl = uploadedFileData.url;
-
-    return uploadedImageUrl;
-  } catch (error) {
-    console.error("Error uploading image:", error);
-    throw new Error("Failed to upload image");
-  }
+  return new Promise((resolve, reject) => {
+    const imageName = Date.now() + "-" + file.originalname;
+    const imagePath = 'uploads/' + imageName;
+    
+    file.mv(imagePath, (err) => {
+      if (err) {
+        console.error("Error uploading image:", err);
+        reject(new Error("Failed to upload image"));
+      }
+      
+      // יכול להחזיר את הנתיב המלא לתמונה
+      resolve(imagePath);
+    });
+  });
 };
+
 
 const createCard = async (normalizedCard, imageFile = null) => {
   if (DB === "MONGODB") {
@@ -233,3 +225,6 @@ exports.deleteCard = deleteCard;
 
 exports.getCardComments = getCardComments;
 exports.addCardComment = addCardComment;
+exports.uploadImage = uploadImage;
+
+exports.upload = upload;

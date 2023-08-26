@@ -11,6 +11,7 @@
   "author": "ehab aburesh",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1445.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "chalk": "^4.1.1",

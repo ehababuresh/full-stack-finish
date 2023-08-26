@@ -3,7 +3,8 @@ const auth = require("../../auth/authService");
 const { handleError } = require("../../utils/handleErrors");
 const normalizeCard = require("../helpers/normalizeCard");
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+
+const { uploadImage } = require('../models/cardsAccessDataService');
 
 const {
   getCards,
@@ -13,10 +14,20 @@ const {
   updateCard,
   likeCard,
   deleteCard,
-  
 } = require("../models/cardsAccessDataService");
 const validateCard = require("../validations/cardValidationService");
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/", async (req, res) => {
   try {
@@ -47,31 +58,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", auth, async (req, res) => {
-  try {
-    let card = req.body;
-    const user = req.user;
-
-    if (!user.isBusiness)
-      return handleError(res, 403, "Authentication Error: Unauthorize user");
-
-    const { error } = validateCard(card);
-    if (error)
-      return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
-
-    card = await normalizeCard(card, user._id);
-
-    card = await createCard(card);
-    return res.status(201).send(card);
-  } catch (error) {
-    return handleError(res, error.status || 500, error.message);
-  }
-});
-
-
 router.post("/", auth, upload.single("image"), async (req, res) => {
   try {
-    let card = req.body;
+    const card = req.body;
     const user = req.user;
     const imageFile = req.file;
 
@@ -82,15 +71,15 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
     if (error)
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
 
-    card = await normalizeCard(card, user._id);
+    const normalizedCard = await normalizeCard(card, user._id, imageFile); 
 
-    card = await createCard(card, imageFile); 
-    return res.status(201).send(card);
+    const createdCard = await createCard(normalizedCard);
+
+    return res.status(201).send(createdCard);
   } catch (error) {
     return handleError(res, error.status || 500, error.message);
   }
 });
-
 
 router.put("/:id", auth, async (req, res) => {
   try {
@@ -140,9 +129,4 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
-
-
 module.exports = router;
-
-
-
