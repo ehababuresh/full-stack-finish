@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {  useEffect, useCallback } from "react";
 import useCards from "../hooks/useCards";
 import { useUser } from "../../users/providers/UserProvider";
 import { Navigate } from "react-router-dom";
