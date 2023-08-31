@@ -37,6 +37,7 @@ const GoogleLoginButton = ({ onSuccess, onError }) => {
       render={(renderProps) => (
         <button onClick={renderProps.onClick} disabled={renderProps.disabled}>
           התחבר דרך גוגל
+          
         </button>
       )}
     />
