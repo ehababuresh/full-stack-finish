@@ -30,6 +30,7 @@ const Card = ({ card, onDelete, onLike }) => {
         minWidth: 280,
         transform: `scale(${isHovered ? 1.03 : 1})`, 
         transition: "transform 0.2s ease-in-out", 
+        borderRadius: "20%",
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
