@@ -15,16 +15,55 @@ const LeftNavBar = () => {
       <Logo />
 
       <Box sx={{ display: { xs: "none", md: "inline-flex" } }}>
-        <NavItem label="about" to={ROUTES.ABOUT} />
+        <NavItem
+          sx={{
+            transition: "transform 0.2s ease-in-out",
+            "&:hover": {
+              transform: "scale(1.2)",
+            },
+          }}
+          label="about"
+          to={ROUTES.ABOUT}
+        />
 
-        {user && <NavItem label="Fav profile" to={ROUTES.FAV_CARDS} />}
+        {user && (
+          <NavItem
+            sx={{
+              transition: "transform 0.2s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.2)",
+              },
+            }}
+            label="Fav profile"
+            to={ROUTES.FAV_CARDS}
+          />
+        )}
 
         {user && user.isBusiness && (
-          <NavItem label="My profiles" to={ROUTES.MY_CARDS} />
+          <NavItem
+            sx={{
+              transition: "transform 0.2s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.2)",
+              },
+            }}
+            label="My profiles"
+            to={ROUTES.MY_CARDS}
+          />
         )}
-      
-          {user &&   <NavItem label="Contact us" to={ROUTES.CONTACT} />}
-        
+
+        {user && (
+          <NavItem
+            sx={{
+              transition: "transform 0.2s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.2)",
+              },
+            }}
+            label="Contact us"
+            to={ROUTES.CONTACT}
+          />
+        )}
       </Box>
     </Box>
   );

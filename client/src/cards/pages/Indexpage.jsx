@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Card, CardMedia, CardContent, Avatar, CircularProgress, Fade, Button } from '@mui/material';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
-import { useNavigate, Navigate } from "react-router-dom";
-import ROUTES from "../../routes/routesModel";
+import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+
+const EnlargableCardMedia = styled(CardMedia)`
+  transition: transform 0.1s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
 
 const Indexpage = () => {
   const [images] = useState([
@@ -60,7 +69,6 @@ const Indexpage = () => {
   const handleRegisterClick = () => {
     navigate('/signup', { replace: true }); 
   };
-
   return (
     <Box sx={{ backgroundColor: '#f1f9f1', padding: '2rem', position: 'relative' }}>
       {loading && (
@@ -77,7 +85,7 @@ const Indexpage = () => {
         אתר המציג לך אנשים מוצלחים מגמות קריירה שונות ומספרים את סיפורם, בוא תלמד מה הדרך הנכונה איך להיות עשיר
       </Typography>
       <Card sx={{ maxWidth: 400, margin: '2rem auto', backgroundColor: '#ffffff', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
-        <CardMedia
+        <EnlargableCardMedia
           component="img"
           height="300"
           image={images[currentImageIndex].img}
@@ -100,10 +108,9 @@ const Indexpage = () => {
           <KeyboardArrowRight sx={{ cursor: 'pointer' }} onClick={handleNextImage} />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center', paddingBottom: '1rem' }}>
-       
-    <Button variant="contained" color="primary" size="large" onClick={handleRegisterClick}>
-      הירשם עכשיו
-    </Button>
+          <Button variant="contained" color="primary" size="large" onClick={handleRegisterClick}>
+            הירשם עכשיו
+          </Button>
         </Box>
       </Card>
     </Box>
