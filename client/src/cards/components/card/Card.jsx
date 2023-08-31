@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { func } from "prop-types";
 import MuiCard from "@mui/material/Card";
 import CardActionArea from "@mui/material/CardActionArea";
@@ -14,9 +14,26 @@ import Avatar from "@mui/material/Avatar";
 const Card = ({ card, onDelete, onLike }) => {
   const navigate = useNavigate();
   const { user } = useUser();
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
-    <MuiCard sx={{ minWidth: 280 }}>
+    <MuiCard
+      sx={{
+        minWidth: 280,
+        transform: `scale(${isHovered ? 1.03 : 1})`, 
+        transition: "transform 0.2s ease-in-out", 
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <CardActionArea
         onClick={() => navigate(`${ROUTES.CARD_DETAILS}/${card._id}`)}
       >
