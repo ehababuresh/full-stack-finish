@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import ROUTES from "../../../routes/routesModel";
 import { useUser } from "../../../users/providers/UserProvider";
 import Avatar from "@mui/material/Avatar";
+import { green } from "@mui/material/colors"; 
 
 const Card = ({ card, onDelete, onLike }) => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const Card = ({ card, onDelete, onLike }) => {
         transform: `scale(${isHovered ? 1.03 : 1})`, 
         transition: "transform 0.2s ease-in-out", 
         borderRadius: "20%",
+        backgroundColor: isHovered ? green[50] : "white", 
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

@@ -168,7 +168,7 @@ const UserForm = ({
         />
       </Grid>
       
-      {/* Textarea for additional text */}
+    
       <TextareaAutosize
         name="description"
         aria-label="textarea"
