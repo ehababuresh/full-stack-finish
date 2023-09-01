@@ -76,6 +76,7 @@ const LoginPage = () => {
     setLoading(true);
     console.log("התחברות דרך גוגל הצליחה!", response);
     const { profileObj, tokenId } = response;
+    
 
     setUser(profileObj);
     setToken(tokenId);
