@@ -36,6 +36,7 @@ router.post("/", async (req, res) => {
     //   console.log("Email sent:", info.response);
     //   return res.status(200).send("Form data received and email sent successfully");
     // });
+    
   } catch (error) {
     console.error("Error processing form data:", error);
     return res.status(500).send("Failed to process form data");
