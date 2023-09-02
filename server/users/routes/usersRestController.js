@@ -4,7 +4,7 @@ const auth = require("../../auth/authService");
 const { handleError } = require("../../utils/handleErrors");
 const { generateUserPassword } = require("../helpers/bcrypt");
 const normalizeUser = require("../helpers/normalizeUser");
-
+const multer = require('multer');
 
 
 const {
@@ -25,25 +25,45 @@ const {
   validateLogin,
   validateUserUpdate,
 } = require("../validations/userValidationService");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post('/', upload.single('imageFile'), async (req, res) => {
   try {
     let user = req.body;
     const { error } = validateRegistration(user);
     if (error)
       return handleError(res, 400, `Joi Error: ${error.details[0].message}`);
 
+    if (req.file) {
+      // req.file is the uploaded file metadata
+      user.image = {
+        url: `/uploads/${req.file.filename}`,  // replace this path with your actual file path
+        alt: user.alt || 'User Image',
+      };
+    }
+
     user = normalizeUser(user);
     user.password = generateUserPassword(user.password);
 
     user = await registerUser(user);
+
     return res.status(201).send(user);
   } catch (error) {
     return handleError(res, error.status || 500, error.message);
   }
 });
+
 
 router.post("/login", async (req, res) => {
   try {

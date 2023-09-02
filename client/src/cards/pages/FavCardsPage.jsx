@@ -1,4 +1,4 @@
-import React, {  useEffect, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import useCards from "../hooks/useCards";
 import { useUser } from "../../users/providers/UserProvider";
 import { Navigate } from "react-router-dom";
@@ -14,9 +14,12 @@ const FavCardsPage = () => {
   const { value, ...rest } = useCards();
   const { isLoading, error, cards, filteredCards } = value;
   const { handleDeleteCard, handleGetFavCards } = rest;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    handleGetFavCards();
+    handleGetFavCards().finally(() => {
+      setTimeout(() => setLoading(false), 500); 
+    });
   }, []);
 
   const onDeleteCard = useCallback(
@@ -35,28 +38,30 @@ const FavCardsPage = () => {
 
   return (
     <Container>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} sm={10} md={8}>
-          <PageHeader
-            title="האנשים המוצלחים שאהבתי"
-            subtitle="פה אפשר לראות האנשים שאני אהבתי הסיפור שלהם"
-          />
-        </Grid>
-      </Grid>
-
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-        {isLoading ? (
-          <CircularProgress />
-        ) : (
-          <CardsFeedback
-            isLoading={isLoading}
-            error={error}
-            cards={filteredCards}
-            onDelete={onDeleteCard}
-            onLike={changeLikeStatus}
-          />
-        )}
-      </div>
+      {loading && (
+        <CircularProgress style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }} />
+      )}
+      {!loading && (
+        <>
+          <Grid container justifyContent="center">
+            <Grid item xs={12} sm={10} md={8}>
+              <PageHeader
+                title="האנשים המוצלחים שאהבתי"
+                subtitle="פה אפשר לראות האנשים שאני אהבתי הסיפור שלהם"
+              />
+            </Grid>
+          </Grid>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            <CardsFeedback
+              isLoading={isLoading}
+              error={error}
+              cards={filteredCards}
+              onDelete={onDeleteCard}
+              onLike={changeLikeStatus}
+            />
+          </div>
+        </>
+      )}
     </Container>
   );
 };
