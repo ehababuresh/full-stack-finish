@@ -50,6 +50,7 @@ const CardDetailsPage = () => {
           setSnackbarOpen(true);
           setSnackbarMessage(`תגובה נשלחה בהצלחה`); 
           setIsSending(false);
+          setComment('');
         })
         .catch((error) => {
           console.error("Error saving comment:", error);
@@ -119,16 +120,20 @@ const CardDetailsPage = () => {
       <br/>
       <br/>
       <div>
-        <TextField
-          label="הוסף תגובה"
-          value={comment}
-          onChange={handleCommentChange}
-          fullWidth
-        />
+      <TextField
+  label="הוסף תגובה"
+  multiline
+  rows={5} 
+  variant="outlined" 
+  value={comment}
+  onChange={handleCommentChange}
+  fullWidth
+  inputProps={{
+    maxLength: 5000 
+  }}
+/>
       </div>
-        
-      
-      
+      <br/>
       <Button variant="contained" onClick={handleAddComment} disabled={isSending}>
         {isSending ? <CircularProgress size={24}/> : 'שלח'}
       </Button>
