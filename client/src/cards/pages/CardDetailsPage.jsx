@@ -1,18 +1,28 @@
-
 import React, { useEffect, useState } from "react";
 import useCards from "../hooks/useCards";
 import { useUser } from "../../users/providers/UserProvider";
 import { useNavigate, Navigate } from "react-router-dom";
 import ROUTES from "../../routes/routesModel";
-import { Container, Snackbar, Alert, TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Paper } from "@mui/material";
+import {
+  Container,
+  Snackbar,
+  Alert,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+  Typography,
+  Paper,
+  CircularProgress,
+} from "@mui/material";
 import { useParams } from "react-router-dom";
 import mapCardToModel from "../helpers/normalization/mapCardToModel";
 import CreateCardPage from "./CreateCardPage";
 import { Delete } from '@mui/icons-material';
-import { v4 as uuidv4 } from 'uuid';
 import { deleteComment, getComments, saveComment } from "../services/commentsApiService";
-
-import CircularProgress from '@mui/material/CircularProgress';
 
 const CardDetailsPage = () => {
   const [cardInfo, setCardInfo] = useState();
@@ -25,6 +35,7 @@ const CardDetailsPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isSending, setIsSending] = useState(false);
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
@@ -32,27 +43,26 @@ const CardDetailsPage = () => {
 
   const handleAddComment = () => {
     if (comment.trim() !== '') {
-      const newComment = {
-        _id: uuidv4(),
-        content: comment,
-      };
-      
-      saveComment(user._id, cardId, newComment.content)
+      setIsSending(true);
+      saveComment(user._id, cardId, comment, user.name) 
         .then((savedComment) => {
           refreshComments(cardId);
           setSnackbarOpen(true);
-          setSnackbarMessage('תגובה נשלחה בהצלחה');
+          setSnackbarMessage(`תגובה נשלחה בהצלחה`); 
+          setIsSending(false);
         })
         .catch((error) => {
           console.error("Error saving comment:", error);
+          setIsSending(false);
         });
     }
   };
 
+
   const handleDeleteComment = (_id) => {
     deleteComment(_id)
       .then(res => {
-        refreshComments(cardInfo._id);
+        refreshComments(cardId);
         setSnackbarOpen(true);
         setSnackbarMessage('תגובה נמחקה בהצלחה');
       })
@@ -64,7 +74,6 @@ const CardDetailsPage = () => {
   const refreshComments = (cardId) => {
     getComments(cardId)
       .then((res) => {
-        console.log("Comments from server:", res); 
         setComments(res);
       })
       .catch((err) => {
@@ -77,7 +86,7 @@ const CardDetailsPage = () => {
     handleGetCard(cardId).then(data => {
       const modeledCard = mapCardToModel(data);
       setCardInfo(modeledCard);
-      setIsLoading(false); 
+      setIsLoading(false);
     });
   }, [cardId, handleGetCard]);
 
@@ -85,9 +94,8 @@ const CardDetailsPage = () => {
     if (!cardInfo) {
       return;
     }
-
-    refreshComments(cardInfo._id);
-  }, [cardInfo, cardInfo?._id]);
+    refreshComments(cardId);
+  }, [cardInfo, cardId]);
 
   if (!user) return <Navigate replace to={ROUTES.ROOT} />;
 
@@ -106,53 +114,65 @@ const CardDetailsPage = () => {
   }
 
   return (
-    <Container
-      sx={{
-        paddingTop: 0,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <Container>
+      {cardInfo && <CreateCardPage card={cardInfo} />}
+      <br/>
+      <br/>
       <div>
-        {cardInfo !== null && <CreateCardPage card={cardInfo} />}
-
-        <List>
-          {comments.map((comment, index) => (
-            <Paper key={comment._id} elevation={3} style={{ margin: '10px', padding: '10px' }}>
-              <ListItem>
-                <ListItemText
-                  primary={comment.content}
-                  secondary={<Typography variant="body2" color="text.secondary">{comment.date}</Typography>}
-                 
-                  primaryTypographyProps={{ style: { color: 'black' } }}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteComment(comment._id)}>
-                    <Delete />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </Paper>
-          ))}
-        </List>
-
         <TextField
           label="הוסף תגובה"
           value={comment}
           onChange={handleCommentChange}
           fullWidth
         />
-        <Button variant="contained" onClick={handleAddComment}>שלח</Button>
       </div>
+        
+      
+      
+      <Button variant="contained" onClick={handleAddComment} disabled={isSending}>
+        {isSending ? <CircularProgress size={24}/> : 'שלח'}
+      </Button>
 
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+      <List>
+        {comments.map((comment) => (
+          <Paper key={comment._id} elevation={3} style={{ margin: '10px', padding: '10px' }}>
+            <ListItem>
+              <ListItemText
+                primary={comment.content}
+                secondary={
+                  <>
+                    <Typography variant="body2" color="text.secondary">
+                      {comment.senderName}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {comment.createdAt ? new Date(comment.createdAt).toLocaleString('he-IL', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                      }) : 'תאריך לא זמין'}
+                    </Typography>
+                  </>
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteComment(comment._id)}>
+                  <Delete />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          </Paper>
+        ))}
+      </List>
+
+      <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success">
           {snackbarMessage}
         </Alert>
       </Snackbar>
     </Container>
   );
-}
+};
 
 export default CardDetailsPage;

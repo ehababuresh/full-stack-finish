@@ -26,6 +26,7 @@ router.post("/:userId/:cardId", auth, async (req, res) => {
       cardId: cardId,
       userId: userId,
       content: content,
+      // date: new Date(),
     });
     await newComment.save();
     return res.status(201).send(newComment);
