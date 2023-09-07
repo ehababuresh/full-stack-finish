@@ -17,12 +17,20 @@ import {
   Typography,
   Paper,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Box,
+  Divider,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import mapCardToModel from "../helpers/normalization/mapCardToModel";
 import CreateCardPage from "./CreateCardPage";
-import { Delete } from '@mui/icons-material';
+import { Delete } from "@mui/icons-material";
 import { deleteComment, getComments, saveComment } from "../services/commentsApiService";
+
+ 
 
 const CardDetailsPage = () => {
   const [cardInfo, setCardInfo] = useState();
@@ -36,6 +44,42 @@ const CardDetailsPage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [commentToReadMore, setCommentToReadMore] = useState(null);
+
+  // State for handling the delete confirmation dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [commentToDeleteId, setCommentToDeleteId] = useState(null);
+
+  // State for comment count
+  const [commentCount, setCommentCount] = useState(0);
+
+  // Function to open the delete confirmation dialog
+  const openDeleteDialog = (commentId) => {
+    setCommentToDeleteId(commentId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Function to close the delete confirmation dialog
+  const closeDeleteDialog = () => {
+    setCommentToDeleteId(null);
+    setDeleteDialogOpen(false);
+  };
+
+  // Function to handle comment deletion
+  const handleConfirmDelete = () => {
+    if (commentToDeleteId) {
+      deleteComment(commentToDeleteId)
+        .then((res) => {
+          refreshComments(cardId);
+          setSnackbarOpen(true);
+          setSnackbarMessage("תגובה נמחקה בהצלחה");
+          closeDeleteDialog();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
@@ -44,11 +88,11 @@ const CardDetailsPage = () => {
   const handleAddComment = () => {
     if (comment.trim() !== '') {
       setIsSending(true);
-      saveComment(user._id, cardId, comment, user.name) 
+      saveComment(user._id, cardId, comment, user.name)
         .then((savedComment) => {
           refreshComments(cardId);
           setSnackbarOpen(true);
-          setSnackbarMessage(`תגובה נשלחה בהצלחה`); 
+          setSnackbarMessage(`תגובה נשלחה בהצלחה`);
           setIsSending(false);
           setComment('');
         })
@@ -59,27 +103,23 @@ const CardDetailsPage = () => {
     }
   };
 
-
   const handleDeleteComment = (_id) => {
-    deleteComment(_id)
-      .then(res => {
-        refreshComments(cardId);
-        setSnackbarOpen(true);
-        setSnackbarMessage('תגובה נמחקה בהצלחה');
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    openDeleteDialog(_id);
   };
 
   const refreshComments = (cardId) => {
     getComments(cardId)
       .then((res) => {
         setComments(res);
+        setCommentCount(res.length); 
       })
       .catch((err) => {
         console.error(err);
       });
+  };
+
+  const handleReadMore = (content) => {
+    setCommentToReadMore(content);
   };
 
   useEffect(() => {
@@ -116,34 +156,45 @@ const CardDetailsPage = () => {
 
   return (
     <Container>
-      {cardInfo && <CreateCardPage card={cardInfo} />}
-      <br/>
-      <br/>
+      {cardInfo && <CreateCardPage card={cardInfo} commentCount={commentCount} />}
+
+    
+     
+      <br />
+      <br />
       <div>
-      <TextField
-  label="הוסף תגובה"
-  multiline
-  rows={5} 
-  variant="outlined" 
-  value={comment}
-  onChange={handleCommentChange}
-  fullWidth
-  inputProps={{
-    maxLength: 5000 
-  }}
-/>
+        <TextField
+          label="הוסף תגובה"
+          multiline
+          rows={5}
+          variant="outlined"
+          value={comment}
+          onChange={handleCommentChange}
+          fullWidth
+          inputProps={{
+            maxLength: 5000,
+          }}
+        />
       </div>
-      <br/>
+      <br />
       <Button variant="contained" onClick={handleAddComment} disabled={isSending}>
-        {isSending ? <CircularProgress size={24}/> : 'שלח'}
+        {isSending ? <CircularProgress size={24} /> : 'שלח'}
       </Button>
+
+      {/* Comment count */}
+      <Typography variant="body2" color="text.secondary">
+        <Typography fontWeight={700} component="span">
+          כמות תגובות:{" "}
+        </Typography>
+        {commentCount}
+      </Typography>
 
       <List>
         {comments.map((comment) => (
           <Paper key={comment._id} elevation={3} style={{ margin: '10px', padding: '10px' }}>
             <ListItem>
               <ListItemText
-                primary={comment.content}
+                primary={commentToReadMore === comment.content ? comment.content : comment.content.slice(0, 500)}
                 secondary={
                   <>
                     <Typography variant="body2" color="text.secondary">
@@ -161,6 +212,24 @@ const CardDetailsPage = () => {
                   </>
                 }
               />
+              {comment.content.length > 500 && commentToReadMore !== comment.content && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => handleReadMore(comment.content)}
+                >
+                  קרא עוד
+                </Button>
+              )}
+              {commentToReadMore === comment.content && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => setCommentToReadMore(null)}
+                >
+                  סגור
+                </Button>
+              )}
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteComment(comment._id)}>
                   <Delete />
@@ -171,6 +240,27 @@ const CardDetailsPage = () => {
         ))}
       </List>
 
+      {/* Delete confirmation dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={closeDeleteDialog}
+        aria-labelledby="delete-dialog-title"
+      >
+        <DialogTitle id="delete-dialog-title">האם למחוק תגובה זו?</DialogTitle>
+        <DialogContent>
+          <Typography>האם אתה בטוח שברצונך למחוק את התגובה?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDeleteDialog} color="primary">
+            ביטול
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary">
+            מחק
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Snackbar for notifications */}
       <Snackbar open={snackbarOpen} autoHideDuration={5000} onClose={() => setSnackbarOpen(false)}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="success">
           {snackbarMessage}
