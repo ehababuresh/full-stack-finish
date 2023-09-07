@@ -193,7 +193,7 @@ const getCardComments = async cardId => {
 };
 
 
-const addCardComment = async (cardId, authorId, userId, content) => {
+const addCardComment = async (cardId, authorId, userId, content,senderName) => {
   if (DB === "MONGODB") {
     try {
       const newComment = new Comment({
@@ -201,6 +201,7 @@ const addCardComment = async (cardId, authorId, userId, content) => {
         authorId: authorId,
         userId: userId,
         content: content,
+        senderName: senderName,
       });
       await newComment.save();
       return Promise.resolve(newComment);

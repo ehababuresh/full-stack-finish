@@ -16,18 +16,18 @@ export const getComments = async (cardId) => {
 };
 
 
-export const saveComment = async (authorId, cardId, content) => {
+export const saveComment = async (authorId, cardId, content, senderName) => {
   try {
-    const { data } = await axios.post(`${apiUrl}/comments/${authorId}/${cardId}`, { content });
+    const { data } = await axios.post(`${apiUrl}/comments/${authorId}/${cardId}`, { content, senderName });
     return data;
   } catch (error) {
     return Promise.reject(error.message);
   }
 };
 
-export const updateComment = async (commentId, content) => {
+export const updateComment = async (commentId, content, senderName) => {
   try {
-    const { data } = await axios.put(`${apiUrl}/comments/${commentId}`, { content });
+    const { data } = await axios.put(`${apiUrl}/comments/${commentId}`, { content, senderName});
     return data;
   } catch (error) {
     return Promise.reject(error.message);

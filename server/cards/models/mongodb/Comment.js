@@ -16,6 +16,10 @@ const commentSchema = new mongoose.Schema({
     ref: "card",
     required: true,
   },
+  senderName: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

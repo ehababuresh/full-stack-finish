@@ -21,16 +21,14 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Box,
-  Divider,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import mapCardToModel from "../helpers/normalization/mapCardToModel";
 import CreateCardPage from "./CreateCardPage";
 import { Delete } from "@mui/icons-material";
 import { deleteComment, getComments, saveComment } from "../services/commentsApiService";
+import CardBody from "../components/card/CardBody";
 
- 
 
 const CardDetailsPage = () => {
   const [cardInfo, setCardInfo] = useState();
@@ -39,6 +37,7 @@ const CardDetailsPage = () => {
   const { cardId } = useParams();
   const navigate = useNavigate();
   const [comment, setComment] = useState('');
+  const [senderName, setSenderName] = useState(''); 
   const [comments, setComments] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -66,7 +65,6 @@ const CardDetailsPage = () => {
   };
 
   // Function to handle comment deletion
-  
   const handleConfirmDelete = () => {
     if (commentToDeleteId) {
       deleteComment(commentToDeleteId)
@@ -89,13 +87,14 @@ const CardDetailsPage = () => {
   const handleAddComment = () => {
     if (comment.trim() !== '') {
       setIsSending(true);
-      saveComment(user._id, cardId, comment, user.name)
+      saveComment(user._id, cardId, comment, senderName) 
         .then((savedComment) => {
           refreshComments(cardId);
           setSnackbarOpen(true);
           setSnackbarMessage(`תגובה נשלחה בהצלחה`);
           setIsSending(false);
           setComment('');
+          setSenderName(''); 
         })
         .catch((error) => {
           console.error("Error saving comment:", error);
@@ -157,11 +156,20 @@ const CardDetailsPage = () => {
 
   return (
     <Container>
-      {cardInfo && <CreateCardPage card={cardInfo} commentCount={commentCount} />}
+      {cardInfo && <CreateCardPage card={cardInfo} commentCount={commentCount}/>}
+      {/* {cardInfo && <CardBody card={cardInfo} commentCount={commentCount} />} */}
 
-    
-     
       <br />
+      <br />
+      <div>
+        <TextField
+          label="שם השולח"
+          variant="outlined"
+          value={senderName}
+          onChange={(event) => setSenderName(event.target.value)}
+          fullWidth
+        />
+      </div>
       <br />
       <div>
         <TextField
@@ -190,56 +198,57 @@ const CardDetailsPage = () => {
         {commentCount}
       </Typography>
 
-      <List>
-        {comments.map((comment) => (
-          <Paper key={comment._id} elevation={3} style={{ margin: '10px', padding: '10px' }}>
-            <ListItem>
-              <ListItemText
-                primary={commentToReadMore === comment.content ? comment.content : comment.content.slice(0, 500)}
-                secondary={
-                  <>
-                    <Typography variant="body2" color="text.secondary">
-                      {comment.senderName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {comment.createdAt ? new Date(comment.createdAt).toLocaleString('he-IL', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                      }) : 'תאריך לא זמין'}
-                    </Typography>
-                  </>
-                }
-              />
-              {comment.content.length > 500 && commentToReadMore !== comment.content && (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => handleReadMore(comment.content)}
-                >
-                  קרא עוד
-                </Button>
-              )}
-              {commentToReadMore === comment.content && (
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => setCommentToReadMore(null)}
-                >
-                  סגור
-                </Button>
-              )}
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteComment(comment._id)}>
-                  <Delete />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          </Paper>
-        ))}
-      </List>
+      
+<List>
+  {comments.map((comment) => (
+    <Paper key={comment._id} elevation={3} style={{ margin: '10px', padding: '10px' }}>
+      <ListItem>
+        <ListItemText
+          primary={commentToReadMore === comment.content ? comment.content : comment.content.slice(0, 500)}
+          secondary={
+            <>
+              <Typography variant="body2" color="text.secondary">
+                שולח: {comment.senderName} 
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {comment.createdAt ? new Date(comment.createdAt).toLocaleString('he-IL', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit'
+                }) : 'תאריך לא זמין'}
+              </Typography>
+            </>
+          }
+        />
+        {comment.content.length > 500 && commentToReadMore !== comment.content && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => handleReadMore(comment.content)}
+          >
+            קרא עוד
+          </Button>
+        )}
+        {commentToReadMore === comment.content && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setCommentToReadMore(null)}
+          >
+            סגור
+          </Button>
+        )}
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteComment(comment._id)}>
+            <Delete />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Paper>
+  ))}
+</List>
 
       {/* Delete confirmation dialog */}
       <Dialog

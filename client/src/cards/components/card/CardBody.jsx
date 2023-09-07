@@ -3,9 +3,10 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import { Divider, Box, Typography } from "@mui/material";
 import cardType from "../../models/types/cardType";
+import PropTypes from "prop-types";
 
-const CardBody = ({ card }) => {
-  const { street, houseNumber,state, city,country } = card.address;
+const CardBody = ({ card, commentCount }) => { 
+  const { street, houseNumber, state, city, country } = card.address;
   return (
     <CardContent>
       <CardHeader
@@ -23,7 +24,7 @@ const CardBody = ({ card }) => {
       <Box mt={1}>
         <Typography variant="body2" color="text.secondary">
           <Typography fontWeight={700} component="span">
-          salary:{" "}
+            salary:{" "}
           </Typography>
           {state}
         </Typography>
@@ -31,14 +32,20 @@ const CardBody = ({ card }) => {
           <Typography fontWeight={700} component="span">
             address:{" "}
           </Typography>
-          {/* {street} {houseNumber}  */}
+          {/* {street} {houseNumber} */}
           {country}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <Typography fontWeight={700} component="span">
-          {/* email:{" "} */}
+            {/* email:{" "} */}
           </Typography>
           {/* {card.email} */}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <Typography fontWeight={700} component="span">
+            {/* כמות תגובות:{" "}  */}
+          </Typography>
+          {commentCount}
         </Typography>
       </Box>
     </CardContent>
@@ -47,6 +54,7 @@ const CardBody = ({ card }) => {
 
 CardBody.propTypes = {
   card: cardType.isRequired,
+  commentCount: PropTypes.number.isRequired, 
 };
 
 export default CardBody;

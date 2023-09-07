@@ -20,12 +20,13 @@ router.get("/:cardId", auth, async (req, res) => {
 
 router.post("/:userId/:cardId", auth, async (req, res) => {
   const { userId, cardId } = req.params;
-  const { content } = req.body;
+  const { content,senderName } = req.body;
   try {
     const newComment = new commentsModel({
       cardId: cardId,
       userId: userId,
       content: content,
+      senderName: senderName,
       // date: new Date(),
     });
     await newComment.save();

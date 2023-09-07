@@ -20,6 +20,7 @@ const useCards = () => {
   const [filteredCards,setFilter] = useState (null); 
   const [searchParams] = useSearchParams();
   const [comments, setComments] = useState([]);
+  const [senderName, setSenderName] = useState(''); 
 
   useEffect (() => {
     setQuery (searchParams.get("q") ?? "") ; 
@@ -150,7 +151,7 @@ const handleUpdateCard = useCallback (
   }, []);
 
   
-  const handleAddComment = useCallback(async (cardId, newComment) => {
+  const handleAddComment = useCallback(async (cardId, newComment, senderName) => {
     try {
       setLoading(true);
   
@@ -159,7 +160,7 @@ const handleUpdateCard = useCallback (
       }
   
       const comments = await getComments(cardId); 
-      const savedComment = await saveComment(user._id, cardId, newComment); 
+      const savedComment = await saveComment(user._id, cardId, newComment, senderName); 
   
       setComments(comments); 
       setLoading(false);
@@ -172,8 +173,8 @@ const handleUpdateCard = useCallback (
 
   
   const value = useMemo(() => {
-    return { isLoading, cards, card, error ,filteredCards,comments };
-  }, [isLoading, cards, card, error , filteredCards,comments]);
+    return { isLoading, cards, card, error ,filteredCards,comments,senderName };
+  }, [isLoading, cards, card, error , filteredCards,comments,senderName]);
 
 
   return {
