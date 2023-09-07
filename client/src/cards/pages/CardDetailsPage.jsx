@@ -66,6 +66,7 @@ const CardDetailsPage = () => {
   };
 
   // Function to handle comment deletion
+  
   const handleConfirmDelete = () => {
     if (commentToDeleteId) {
       deleteComment(commentToDeleteId)
