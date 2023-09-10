@@ -15,7 +15,7 @@ const CardDeleteDialog = ({isDialogOpen, onDelete , onChangeDialog}) => {
        maxWidth = "xs">
 
         <DialogTitle  id = "alert-dialog-title">
-        {"Are you sure you want to delete this card?"}
+        {"Are you sure you want to delete this profil?"}
         </DialogTitle>
        <DialogContent>
         <DialogContentText  id = "alert-dialog-description" >
