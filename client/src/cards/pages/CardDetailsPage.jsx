@@ -70,7 +70,7 @@ const CardDetailsPage = () => {
   // Function to handle comment deletion
   const handleConfirmDelete = () => {
     if (commentToDeleteId) {
-      // Check if the user is the owner of the comment
+      // Check if the user is the owner of the  comment
       const commentToDelete = comments.find(
         (comment) => comment._id === commentToDeleteId
       );
