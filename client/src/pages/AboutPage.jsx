@@ -58,6 +58,9 @@ const AboutPage = () => {
               <Typography variant="body1" paragraph>
                 יחד עם זאת, יוסף כהן מציע טיפים וכלים שיכולים לעזור לכם להגשים את חלומותיכם ולהיות מוצלחים בקריירה ובחיים.
               </Typography>
+              <Typography variant="body1" paragraph>
+                אפשר להוסיף תגובות על כל פרופיל ולפתוח דיונים 
+              </Typography>
             </Grid>
           </Grid>
         </Container>
