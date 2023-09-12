@@ -67,7 +67,7 @@ const CardDetailsPage = () => {
     setDeleteDialogOpen(false);
   };
 
-  
+
 // Function to handle comment deletion
 const handleConfirmDelete = () => {
   if (commentToDeleteId) {
@@ -75,7 +75,7 @@ const handleConfirmDelete = () => {
       (comment) => comment._id === commentToDeleteId
     );
 
-    if (!commentToDelete) return; // Exit if no such comment is found
+    if (!commentToDelete) return; 
 
     // Allow the delete operation only if the user is an admin or the owner of the comment
     if (user.isAdmin || commentToDelete.userId === user._id) {
