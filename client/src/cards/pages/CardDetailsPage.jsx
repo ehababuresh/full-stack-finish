@@ -67,32 +67,36 @@ const CardDetailsPage = () => {
     setDeleteDialogOpen(false);
   };
 
-  // Function to handle comment deletion
-  const handleConfirmDelete = () => {
-    if (commentToDeleteId) {
-      // Check if the user is the owner of the  comment
-      const commentToDelete = comments.find(
-        (comment) => comment._id === commentToDeleteId
-      );
+  
+// Function to handle comment deletion
+const handleConfirmDelete = () => {
+  if (commentToDeleteId) {
+    const commentToDelete = comments.find(
+      (comment) => comment._id === commentToDeleteId
+    );
 
-      if (commentToDelete && commentToDelete.userId === user._id) {
-        deleteComment(commentToDeleteId)
-          .then((res) => {
-            refreshComments(cardId);
-            setSnackbarOpen(true);
-            setSnackbarMessage("תגובה נמחקה בהצלחה");
-            closeDeleteDialog();
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      } else {
-        // Display an error message or prevent the delete action
-        console.error("You are not authorized to delete this comment.");
-        // Optionally, show an error message to the user
-      }
+    if (!commentToDelete) return; // Exit if no such comment is found
+
+    // Allow the delete operation only if the user is an admin or the owner of the comment
+    if (user.isAdmin || commentToDelete.userId === user._id) {
+      deleteComment(commentToDeleteId)
+        .then((res) => {
+          refreshComments(cardId);
+          setSnackbarOpen(true);
+          setSnackbarMessage("תגובה נמחקה בהצלחה");
+          closeDeleteDialog();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      // Display an error message or prevent the delete action
+      console.error("You are not authorized to delete this comment.");
+      // Optionally, show an error message to the user
     }
-  };
+  }
+};
+
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
