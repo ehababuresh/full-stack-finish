@@ -1,7 +1,7 @@
 # פרויקט סופי לקורס מתכנת בניית אתרים react hooks mui nodejs mongog db   
 
 
-אתר שמציג אנשים המוצלחים והסיפור שלהם כל אחד ששווה לראות ולהתעניין ולהמשיך בדרך שלהם וגם להוסיף תגובות על הפרופיל ותגובות על תגובות של אנשים שנבנה בצד שרת ובצד לקוח 
+A website featuring successful people and their story is all worth seeing and being interested in and continuing on their path as well as adding comments on the profile and comments on people's comments built on server and client side
 
 סיסמה כניסה לדף לוגין ehab.ab24@gmail.com    9966Ehab!  לקוח רגיל 
 
