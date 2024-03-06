@@ -1,4 +1,4 @@
-# פרויקט סופי לקורס מתכנת בניית אתרים react hooks mui nodejs mongog db   
+# פרויקט סופי לקורס מתכנת בניית אתרים react hooks mui nodejs mongodb   
 
 
 A website featuring successful people and their story is all worth seeing and being interested in and continuing on their path as well as adding comments on the profile and comments on people's comments built on server and client side
